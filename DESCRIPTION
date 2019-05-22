@@ -1,0 +1,15 @@
+Package: tempr
+Type: Package
+Title: Data Science Template for R Projects
+Version: 0.1.0
+Author@R: person("Matthew", "Edwards", email = "mtedwards@-protonmail.com",
+    role = c("aut", "cre"))
+Description: This data science template is designed to be consistent with R 
+    Packages and R for Data Science by Hadley Wickham. Directory structure 
+    compliments the R for Data Science workflow: import, tidy, explore
+    (transform and visualise), model and communicate.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    config
