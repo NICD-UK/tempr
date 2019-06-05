@@ -1767,9 +1767,97 @@ $(document).ready(function () {
 
 
 <!-- rnb-text-begin -->
+<div id="load-data" class="section level2">
+<h2>Load data</h2>
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShmZWF0aGVyKVxuXG50aXRhbmljIDwtIHJlYWRfZmVhdGhlcihcIi4uLy4uL2RhdGEvdGl0YW5pY19yYXcuZmVhdGhlclwiKVxuYGBgIn0= -->
+<pre class="r"><code>library(feather)
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiVGlkeSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQo=</div>
+titanic &lt;- read_feather(&quot;../../data/titanic_raw.feather&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="tidy-features" class="section level2">
+<h2>Tidy features</h2>
+<p>There are a number of package for tidying data. For example: <a href="https://tidyr.tidyverse.org/">tidyr</a> for tidying data and <a href="https://dplyr.tidyverse.org/">dplyr</a> for maniplulating data.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcblxudGl0YW5pYyA8LSB0aXRhbmljICU+JSBcbiAgbXV0YXRlKHRpY2tldF9jbGFzcyAgID0gZmFjdG9yKHRpY2tldF9jbGFzcywgbGFiZWxzID0gYyhcIjFzdFwiLCBcIjJuZFwiLCBcIjNyZFwiKSksXG4gICAgICAgICBzdXJ2aXZlZCAgICAgICA9IGZhY3RvcihzdXJ2aXZlZCwgbGFiZWxzID0gYyhcIm5vXCIsIFwieWVzXCIpKSxcbiAgICAgICAgIGdlbmRlciAgICAgICAgID0gZmFjdG9yKGdlbmRlciksXG4gICAgICAgICBhZ2UgICAgICAgICAgICA9IGFzLmRvdWJsZShhZ2UpLFxuICAgICAgICAgc2libGluZ19zcG91c2UgPSBhcy5pbnRlZ2VyKHNpYmxpbmdfc3BvdXNlKSxcbiAgICAgICAgIHBhcmVudF9jaGlsZCAgID0gYXMuaW50ZWdlcihwYXJlbnRfY2hpbGQpLFxuICAgICAgICAgdGlja2V0X2ZhcmUgICAgPSBhcy5kb3VibGUodGlja2V0X2ZhcmUpLFxuICAgICAgICAgcG9ydF9lbWJhcmtlZCAgPSBmYWN0b3IocG9ydF9lbWJhcmtlZCwgbGFiZWxzID0gYyhcIkNoZXJib3VyZ1wiLCBcIlF1ZWVuc3Rvd25cIiwgXCJTb3V0aGFtcHRvblwiKSkpXG5gYGAifQ== -->
+<pre class="r"><code>library(dplyr)
+
+titanic &lt;- titanic %&gt;% 
+  mutate(ticket_class   = factor(ticket_class, labels = c(&quot;1st&quot;, &quot;2nd&quot;, &quot;3rd&quot;)),
+         survived       = factor(survived, labels = c(&quot;no&quot;, &quot;yes&quot;)),
+         gender         = factor(gender),
+         age            = as.double(age),
+         sibling_spouse = as.integer(sibling_spouse),
+         parent_child   = as.integer(parent_child),
+         ticket_fare    = as.double(ticket_fare),
+         port_embarked  = factor(port_embarked, labels = c(&quot;Cherbourg&quot;, &quot;Queenstown&quot;, &quot;Southampton&quot;)))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="generate-and-select-features" class="section level2">
+<h2>Generate and select features</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmVhdHVyZXMgPC0gYyhcbiAgXCJ0aWNrZXRfY2xhc3NcIixcbiAgXCJzdXJ2aXZlZFwiLFxuICBcInRpdGxlXCIsXG4gIFwiZ2VuZGVyXCIsXG4gIFwiYWdlXCIsXG4gIFwiZmFtaWx5X3NpemVcIixcbiAgXCJ0aWNrZXRfZmFyZVwiLFxuICBcImRlY2tcIixcbiAgXCJwb3J0X2VtYmFya2VkXCJcbilcblxudGl0YW5pYyA9IHRpdGFuaWMgJT4lIFxuICBtdXRhdGUodGl0bGUgPSBmYWN0b3Ioc3RyaW5ncjo6c3RyX2V4dHJhY3QobmFtZSwgcGF0dGVybiA9IFwiWzphbHBoYTpdKlxcXFwuXCIpKSxcbiAgICAgICAgIGRlY2sgID0gZmFjdG9yKHN0cmluZ3I6OnN0cl9leHRyYWN0KGNhYmluX251bWJlciwgcGF0dGVybiA9IFwiWzp1cHBlcjpdXCIpLCBleGNsdWRlID0gTlVMTCksXG4gICAgICAgICBmYW1pbHlfc2l6ZSA9IHNpYmxpbmdfc3BvdXNlICsgcGFyZW50X2NoaWxkKSAlPiUgXG4gIHNlbGVjdChmZWF0dXJlcylcbmBgYCJ9 -->
+<pre class="r"><code>features &lt;- c(
+  &quot;ticket_class&quot;,
+  &quot;survived&quot;,
+  &quot;title&quot;,
+  &quot;gender&quot;,
+  &quot;age&quot;,
+  &quot;family_size&quot;,
+  &quot;ticket_fare&quot;,
+  &quot;deck&quot;,
+  &quot;port_embarked&quot;
+)
+
+titanic = titanic %&gt;% 
+  mutate(title = factor(stringr::str_extract(name, pattern = &quot;[:alpha:]*\\.&quot;)),
+         deck  = factor(stringr::str_extract(cabin_number, pattern = &quot;[:upper:]&quot;), exclude = NULL),
+         family_size = sibling_spouse + parent_child) %&gt;% 
+  select(features)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="training-and-testing-data" class="section level1">
+<h1>Training and testing data</h1>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyc2FtcGxlKVxuYGBgIn0= -->
+<pre class="r"><code>library(rsample)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiB0aWR5clxuIn0= -->
+<pre><code>Loading required package: tidyr</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3BsaXQgPC0gaW5pdGlhbF9zcGxpdCh0aXRhbmljLCBwcm9wID0gNCAvIDUsIHN0cmF0YSA9IFwic3Vydml2ZWRcIilcbnRpdGFuaWNfdHJhaW4gPC0gdHJhaW5pbmcoc3BsaXQpXG50aXRhbmljX3Rlc3QgIDwtIHRlc3Rpbmcoc3BsaXQpXG5gYGAifQ== -->
+<pre class="r"><code>split &lt;- initial_split(titanic, prop = 4 / 5, strata = &quot;survived&quot;)
+titanic_train &lt;- training(split)
+titanic_test  &lt;- testing(split)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="write-data" class="section level2">
+<h2>Write data</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfZmVhdGhlcih0aXRhbmljX3RyYWluLCBwYXRoID0gXCIuLi8uLi9kYXRhL3RpdGFuaWNfdHJhaW4uZmVhdGhlclwiKVxud3JpdGVfZmVhdGhlcih0aXRhbmljX3Rlc3QsIHBhdGggPSBcIi4uLy4uL2RhdGEvdGl0YW5pY190ZXN0LmZlYXRoZXJcIilcbmBgYCJ9 -->
+<pre class="r"><code>write_feather(titanic_train, path = &quot;../../data/titanic_train.feather&quot;)
+write_feather(titanic_test, path = &quot;../../data/titanic_test.feather&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiVGlkeSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyMgTG9hZCBkYXRhCgpgYGB7cn0KbGlicmFyeShmZWF0aGVyKQoKdGl0YW5pYyA8LSByZWFkX2ZlYXRoZXIoIi4uLy4uL2RhdGEvdGl0YW5pY19yYXcuZmVhdGhlciIpCmBgYAoKIyMgVGlkeSBmZWF0dXJlcwoKVGhlcmUgYXJlIGEgbnVtYmVyIG9mIHBhY2thZ2UgZm9yIHRpZHlpbmcgZGF0YS4gRm9yIGV4YW1wbGU6IFt0aWR5cl0oaHR0cHM6Ly90aWR5ci50aWR5dmVyc2Uub3JnLykgZm9yIHRpZHlpbmcgZGF0YSBhbmQgW2RwbHlyXShodHRwczovL2RwbHlyLnRpZHl2ZXJzZS5vcmcvKSBmb3IgbWFuaXBsdWxhdGluZyBkYXRhLgoKYGBge3J9CmxpYnJhcnkoZHBseXIpCgp0aXRhbmljIDwtIHRpdGFuaWMgJT4lIAogIG11dGF0ZSh0aWNrZXRfY2xhc3MgICA9IGZhY3Rvcih0aWNrZXRfY2xhc3MsIGxhYmVscyA9IGMoIjFzdCIsICIybmQiLCAiM3JkIikpLAogICAgICAgICBzdXJ2aXZlZCAgICAgICA9IGZhY3RvcihzdXJ2aXZlZCwgbGFiZWxzID0gYygibm8iLCAieWVzIikpLAogICAgICAgICBnZW5kZXIgICAgICAgICA9IGZhY3RvcihnZW5kZXIpLAogICAgICAgICBhZ2UgICAgICAgICAgICA9IGFzLmRvdWJsZShhZ2UpLAogICAgICAgICBzaWJsaW5nX3Nwb3VzZSA9IGFzLmludGVnZXIoc2libGluZ19zcG91c2UpLAogICAgICAgICBwYXJlbnRfY2hpbGQgICA9IGFzLmludGVnZXIocGFyZW50X2NoaWxkKSwKICAgICAgICAgdGlja2V0X2ZhcmUgICAgPSBhcy5kb3VibGUodGlja2V0X2ZhcmUpLAogICAgICAgICBwb3J0X2VtYmFya2VkICA9IGZhY3Rvcihwb3J0X2VtYmFya2VkLCBsYWJlbHMgPSBjKCJDaGVyYm91cmciLCAiUXVlZW5zdG93biIsICJTb3V0aGFtcHRvbiIpKSkKYGBgCgojIyBHZW5lcmF0ZSBhbmQgc2VsZWN0IGZlYXR1cmVzCgpgYGB7cn0KZmVhdHVyZXMgPC0gYygKICAidGlja2V0X2NsYXNzIiwKICAic3Vydml2ZWQiLAogICJ0aXRsZSIsCiAgImdlbmRlciIsCiAgImFnZSIsCiAgImZhbWlseV9zaXplIiwKICAidGlja2V0X2ZhcmUiLAogICJkZWNrIiwKICAicG9ydF9lbWJhcmtlZCIKKQoKdGl0YW5pYyA9IHRpdGFuaWMgJT4lIAogIG11dGF0ZSh0aXRsZSA9IGZhY3RvcihzdHJpbmdyOjpzdHJfZXh0cmFjdChuYW1lLCBwYXR0ZXJuID0gIls6YWxwaGE6XSpcXC4iKSksCiAgICAgICAgIGRlY2sgID0gZmFjdG9yKHN0cmluZ3I6OnN0cl9leHRyYWN0KGNhYmluX251bWJlciwgcGF0dGVybiA9ICJbOnVwcGVyOl0iKSwgZXhjbHVkZSA9IE5VTEwpLAogICAgICAgICBmYW1pbHlfc2l6ZSA9IHNpYmxpbmdfc3BvdXNlICsgcGFyZW50X2NoaWxkKSAlPiUgCiAgc2VsZWN0KGZlYXR1cmVzKQpgYGAKCiMgVHJhaW5pbmcgYW5kIHRlc3RpbmcgZGF0YQoKYGBge3J9CmxpYnJhcnkocnNhbXBsZSkKCnNwbGl0IDwtIGluaXRpYWxfc3BsaXQodGl0YW5pYywgcHJvcCA9IDQgLyA1LCBzdHJhdGEgPSAic3Vydml2ZWQiKQp0aXRhbmljX3RyYWluIDwtIHRyYWluaW5nKHNwbGl0KQp0aXRhbmljX3Rlc3QgIDwtIHRlc3Rpbmcoc3BsaXQpCmBgYAoKIyMgV3JpdGUgZGF0YQoKYGBge3J9CndyaXRlX2ZlYXRoZXIodGl0YW5pY190cmFpbiwgcGF0aCA9ICIuLi8uLi9kYXRhL3RpdGFuaWNfdHJhaW4uZmVhdGhlciIpCndyaXRlX2ZlYXRoZXIodGl0YW5pY190ZXN0LCBwYXRoID0gIi4uLy4uL2RhdGEvdGl0YW5pY190ZXN0LmZlYXRoZXIiKQpgYGAKCg==</div>
 
 
 

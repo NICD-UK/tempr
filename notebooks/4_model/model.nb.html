@@ -1768,8 +1768,70 @@ $(document).ready(function () {
 
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShmZWF0aGVyKVxubGlicmFyeShyZWNpcGVzKVxubGlicmFyeShwYXJzbmlwKVxubGlicmFyeSh5YXJkc3RpY2spXG5gYGAifQ== -->
+<pre class="r"><code>library(feather)
+library(recipes)
+library(parsnip)
+library(yardstick)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="reading" class="section level2">
+<h2>Reading</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGl0YW5pY190cmFpbiA8LSByZWFkX2ZlYXRoZXIoXCIuLi8uLi9kYXRhL3RpdGFuaWNfdHJhaW4uZmVhdGhlclwiKVxudGl0YW5pY190ZXN0IDwtIHJlYWRfZmVhdGhlcihcIi4uLy4uL2RhdGEvdGl0YW5pY190ZXN0LmZlYXRoZXJcIilcbmBgYCJ9 -->
+<pre class="r"><code>titanic_train &lt;- read_feather(&quot;../../data/titanic_train.feather&quot;)
+titanic_test &lt;- read_feather(&quot;../../data/titanic_test.feather&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="preprocessing" class="section level2">
+<h2>Preprocessing</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVjIDwtIHRpdGFuaWNfdHJhaW4gJT4lIFxuICByZWNpcGUoc3Vydml2ZWQgfiAuKSAlPiUgXG4gIHN0ZXBfY2VudGVyKGFnZSwgZmFtaWx5X3NpemUsIHRpY2tldF9mYXJlKSAlPiUgXG4gIHN0ZXBfc2NhbGUoYWdlLCBmYW1pbHlfc2l6ZSwgdGlja2V0X2ZhcmUpICU+JSBcbiAgcHJlcCh0cmFpbmluZyA9IHRpdGFuaWNfdHJhaW4pXG5cbnRpdGFuaWNfdHJhaW4gPC0gYmFrZShyZWMsIG5ld19kYXRhID0gdGl0YW5pY190cmFpbilcbnRpdGFuaWNfdGVzdCAgPC0gYmFrZShyZWMsIG5ld19kYXRhID0gdGl0YW5pY190ZXN0KVxuYGBgIn0= -->
+<pre class="r"><code>rec &lt;- titanic_train %&gt;% 
+  recipe(survived ~ .) %&gt;% 
+  step_center(age, family_size, ticket_fare) %&gt;% 
+  step_scale(age, family_size, ticket_fare) %&gt;% 
+  prep(training = titanic_train)
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTW9kZWwiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0K</div>
+titanic_train &lt;- bake(rec, new_data = titanic_train)
+titanic_test  &lt;- bake(rec, new_data = titanic_test)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="modelling" class="section level2">
+<h2>Modelling</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZml0IDwtIGxvZ2lzdGljX3JlZygpICU+JSBcbiAgc2V0X2VuZ2luZShcImdsbVwiKSAlPiUgXG4gIGZpdChzdXJ2aXZlZCB+IC4sIGRhdGEgPSB0aXRhbmljX3RyYWluKVxuYGBgIn0= -->
+<pre class="r"><code>fit &lt;- logistic_reg() %&gt;% 
+  set_engine(&quot;glm&quot;) %&gt;% 
+  fit(survived ~ ., data = titanic_train)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="testing" class="section level2">
+<h2>Testing</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJlZGljdChmaXQsIG5ld19kYXRhID0gdGl0YW5pY190ZXN0KSAlPiUgXG4gIGJpbmRfY29scyh0aXRhbmljX3Rlc3QpICU+JSBcbiAgbWV0cmljcyh0cnV0aCA9IHN1cnZpdmVkLCBlc3RpbWF0ZSA9IC5wcmVkX2NsYXNzKVxuYGBgIn0= -->
+<pre class="r"><code>predict(fit, new_data = titanic_test) %&gt;% 
+  bind_cols(titanic_test) %&gt;% 
+  metrics(truth = survived, estimate = .pred_class)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTW9kZWwiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCmBgYHtyIG1lc3NhZ2U9RkFMU0V9CmxpYnJhcnkoZmVhdGhlcikKbGlicmFyeShyZWNpcGVzKQpsaWJyYXJ5KHBhcnNuaXApCmxpYnJhcnkoeWFyZHN0aWNrKQpgYGAKCiMjIFJlYWRpbmcKCmBgYHtyfQp0aXRhbmljX3RyYWluIDwtIHJlYWRfZmVhdGhlcigiLi4vLi4vZGF0YS90aXRhbmljX3RyYWluLmZlYXRoZXIiKQp0aXRhbmljX3Rlc3QgPC0gcmVhZF9mZWF0aGVyKCIuLi8uLi9kYXRhL3RpdGFuaWNfdGVzdC5mZWF0aGVyIikKYGBgCgojIyBQcmVwcm9jZXNzaW5nCgpgYGB7cn0KcmVjIDwtIHRpdGFuaWNfdHJhaW4gJT4lIAogIHJlY2lwZShzdXJ2aXZlZCB+IC4pICU+JSAKICBzdGVwX2NlbnRlcihhZ2UsIGZhbWlseV9zaXplLCB0aWNrZXRfZmFyZSkgJT4lIAogIHN0ZXBfc2NhbGUoYWdlLCBmYW1pbHlfc2l6ZSwgdGlja2V0X2ZhcmUpICU+JSAKICBwcmVwKHRyYWluaW5nID0gdGl0YW5pY190cmFpbikKCnRpdGFuaWNfdHJhaW4gPC0gYmFrZShyZWMsIG5ld19kYXRhID0gdGl0YW5pY190cmFpbikKdGl0YW5pY190ZXN0ICA8LSBiYWtlKHJlYywgbmV3X2RhdGEgPSB0aXRhbmljX3Rlc3QpCmBgYAoKIyMgTW9kZWxsaW5nCgpgYGB7cn0KZml0IDwtIGxvZ2lzdGljX3JlZygpICU+JSAKICBzZXRfZW5naW5lKCJnbG0iKSAlPiUgCiAgZml0KHN1cnZpdmVkIH4gLiwgZGF0YSA9IHRpdGFuaWNfdHJhaW4pCmBgYAoKIyMgVGVzdGluZwoKYGBge3J9CnByZWRpY3QoZml0LCBuZXdfZGF0YSA9IHRpdGFuaWNfdGVzdCkgJT4lIAogIGJpbmRfY29scyh0aXRhbmljX3Rlc3QpICU+JSAKICBtZXRyaWNzKHRydXRoID0gc3Vydml2ZWQsIGVzdGltYXRlID0gLnByZWRfY2xhc3MpCmBgYAoK</div>
 
 
 

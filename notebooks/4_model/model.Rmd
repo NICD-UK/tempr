@@ -2,3 +2,47 @@
 title: "Model"
 output: html_notebook
 ---
+
+```{r message=FALSE}
+library(feather)
+library(recipes)
+library(parsnip)
+library(yardstick)
+```
+
+## Reading
+
+```{r}
+titanic_train <- read_feather("../../data/titanic_train.feather")
+titanic_test <- read_feather("../../data/titanic_test.feather")
+```
+
+## Preprocessing
+
+```{r}
+rec <- titanic_train %>% 
+  recipe(survived ~ .) %>% 
+  step_center(age, family_size, ticket_fare) %>% 
+  step_scale(age, family_size, ticket_fare) %>% 
+  prep(training = titanic_train)
+
+titanic_train <- bake(rec, new_data = titanic_train)
+titanic_test  <- bake(rec, new_data = titanic_test)
+```
+
+## Modelling
+
+```{r}
+fit <- logistic_reg() %>% 
+  set_engine("glm") %>% 
+  fit(survived ~ ., data = titanic_train)
+```
+
+## Testing
+
+```{r}
+predict(fit, new_data = titanic_test) %>% 
+  bind_cols(titanic_test) %>% 
+  metrics(truth = survived, estimate = .pred_class)
+```
+

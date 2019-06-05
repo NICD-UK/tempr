@@ -1,2 +1,2 @@
 default:
-  dataset: "path_to_dataset"
+  data_directory: "data"

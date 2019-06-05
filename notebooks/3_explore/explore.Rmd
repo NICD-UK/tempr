@@ -2,3 +2,36 @@
 title: "Explore"
 output: html_notebook
 ---
+
+```{r}
+library(feather)
+library(ggplot2)
+```
+
+## Read training data
+
+```{r}
+titanic <- read_feather("../../data/titanic_train.feather")
+```
+
+## Numerical statistics
+
+```{r}
+summary(titanic)
+```
+
+## Graphical statistics
+
+```{r}
+ggplot(data = titanic) +
+  geom_bar(aes(x = ticket_class, y = ..count.., fill = survived), position = "dodge")
+```
+
+```{r}
+ggplot(data = titanic) +
+  geom_bar(aes(x = forcats::fct_reorder(title, survived, function(x) mean(as.numeric(x))), fill = survived), 
+                    position = "fill") +
+  xlab("title") +
+  ylab("proportion") +
+  coord_flip()
+```

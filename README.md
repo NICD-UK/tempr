@@ -24,6 +24,11 @@ The `tempr` package provides a data science template for R projects. This templa
 - `README.md`
 - `template.Rproj`
 
+## Other
+
+- **Git**: We reccomend local and remote git repositories for collaborative projects. To set up a local git repository use the `usethis::use_git` function. To set up a remote git repository use the `usethis::use_github` function. Note: you will need to set up a [github](github.com) account to set up a remote respository. The [usethis](https://usethis.r-lib.org/) website provides details about using these functions.
+- **Style**: We recommend adhering to the tidyverse [style guide](style.tidyverse.org).
+
 ## Import
 
 ## Tidy

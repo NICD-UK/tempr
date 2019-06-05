@@ -2,3 +2,67 @@
 title: "Import"
 output: html_notebook
 ---
+
+## Data directory
+
+```{r message=FALSE}
+data_directory <- fs::path(usethis::proj_path(), 
+                           config::get("data_directory"), 
+                           "titanic.csv")
+
+```
+
+## Import data
+
+There are a number of packages for importing data. For example: [readr](https://readr.tidyverse.org/) for reading `.csv` files; [readxls](https://readxls.tidyverse.org) for reading `.xls` and `.xlsx` files; [haven](https://haven.tidyverse.org/) for `SAS`, `SPSS` and `Strata` files;
+[httr](https://httr.r-lib.org/) for talking to web APIs; [rvest](https://rvest.tidyverse.org/) for scraping websites and [xml2](https://xml2.r-lib.org) for reading `.xml` files.
+
+```{r}
+library(readr)
+
+# The column_names variable is used to define the names of the columns. We recommend that the words in column names be lower case and seperated by underscores.
+
+column_names <- c(
+  "ticket_class",
+  "survived",
+  "name",
+  "gender",
+  "age",
+  "sibling_spouse",
+  "parent_child",
+  "ticket_number",
+  "ticket_fare",
+  "cabin_number",
+  "port_embarked"
+)
+
+# The column_types variables is used to define the types of the columns. We recommend that all column types are defined as characters in the import notebook and defined more accuratly in the tidy notebook.
+
+column_types <- cols(
+  ticket_class = col_character(),
+  survived = col_character(),
+  name = col_character(),
+  gender = col_character(),
+  age = col_character(),
+  sibling_spouse = col_character(),
+  parent_child = col_character(),
+  ticket_number = col_character(),
+  ticket_fare = col_character(),
+  cabin_number = col_character(),
+  port_embarked = col_character()
+)
+
+titanic <- read_csv(data_directory, 
+                    col_names = column_names, 
+                    col_types = column_types, 
+                    na = c("", "NA"),
+                    skip = 1)
+```
+
+## Write data
+
+```{r}
+library(feather)
+
+write_feather(titanic, path = "../../data/titanic_raw.feather")
+```

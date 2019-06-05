@@ -12,6 +12,13 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    config
+    config,
+    usethis,
+    fs,
+    readr,
+    feather,
+    dplyr,
+    stringr,
+    rsample
 URL: https://github.com/NICD-UK/tempr
 BugReports: https://github.com/NICD-UK/tempr/issues

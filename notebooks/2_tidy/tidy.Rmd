@@ -2,3 +2,69 @@
 title: "Tidy"
 output: html_notebook
 ---
+
+## Load data
+
+```{r}
+library(feather)
+
+titanic <- read_feather("../../data/titanic_raw.feather")
+```
+
+## Tidy features
+
+There are a number of package for tidying data. For example: [tidyr](https://tidyr.tidyverse.org/) for tidying data and [dplyr](https://dplyr.tidyverse.org/) for maniplulating data.
+
+```{r}
+library(dplyr)
+
+titanic <- titanic %>% 
+  mutate(ticket_class   = factor(ticket_class, labels = c("1st", "2nd", "3rd")),
+         survived       = factor(survived, labels = c("no", "yes")),
+         gender         = factor(gender),
+         age            = as.double(age),
+         sibling_spouse = as.integer(sibling_spouse),
+         parent_child   = as.integer(parent_child),
+         ticket_fare    = as.double(ticket_fare),
+         port_embarked  = factor(port_embarked, labels = c("Cherbourg", "Queenstown", "Southampton")))
+```
+
+## Generate and select features
+
+```{r}
+features <- c(
+  "ticket_class",
+  "survived",
+  "title",
+  "gender",
+  "age",
+  "family_size",
+  "ticket_fare",
+  "deck",
+  "port_embarked"
+)
+
+titanic = titanic %>% 
+  mutate(title = factor(stringr::str_extract(name, pattern = "[:alpha:]*\\.")),
+         deck  = factor(stringr::str_extract(cabin_number, pattern = "[:upper:]"), exclude = NULL),
+         family_size = sibling_spouse + parent_child) %>% 
+  select(features)
+```
+
+# Training and testing data
+
+```{r}
+library(rsample)
+
+split <- initial_split(titanic, prop = 4 / 5, strata = "survived")
+titanic_train <- training(split)
+titanic_test  <- testing(split)
+```
+
+## Write data
+
+```{r}
+write_feather(titanic_train, path = "../../data/titanic_train.feather")
+write_feather(titanic_test, path = "../../data/titanic_test.feather")
+```
+
