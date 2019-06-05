@@ -32,4 +32,14 @@ The `tempr` package provides a data science template for R projects. This templa
 
 ## Model
 
+Following the scientific method, adapted from [Marcus Gesmann](https://magesblog.com/post/principled-bayesian-workflow/).
+
+1. Create a model for the ‘small world’ of interest
+2. Decide which measurements are relevant
+3. Make predictions using the model
+4. Review if the predictions are reasonable
+5. Set up an experiment and predict the outcome using the model
+6. Carry out the experiment
+7. Compare the measurements with the predictions and go back to 1 if necessary
+
 ## Communicate
